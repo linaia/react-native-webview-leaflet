@@ -75,10 +75,15 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
   private loadHTMLFile = async () => {
     try {
       // let asset: Asset = await AssetUtils.resolveAsync(INDEX_FILE_PATH);
-      const [{ localUri }] = await Asset.loadAsync(INDEX_FILE_PATH);
-      let fileString: string = await FileSystem.readAsStringAsync(
-        localUri
-      );
+
+      // const [{ localUri }] = await Asset.loadAsync(INDEX_FILE_PATH);
+      // const fileString: string = await FileSystem.readAsStringAsync(
+      //   localUri
+      // );
+      
+      const fileString: string = Asset.fromModule(INDEX_FILE_PATH).uri;
+
+      
       this.setState({ webviewContent: fileString });
     } catch (error) {
       console.warn(error);
