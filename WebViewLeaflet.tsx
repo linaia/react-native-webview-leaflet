@@ -75,12 +75,11 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
   private loadHTMLFile = async () => {
     try {
       // let asset: Asset = await AssetUtils.resolveAsync(INDEX_FILE_PATH);
-      // let fileString: string = await FileSystem.readAsStringAsync(
-      //   asset.localUri
-      // );
       const [{ localUri }] = await Asset.loadAsync(INDEX_FILE_PATH);
-
-      this.setState({ webviewContent: localUri });
+      let fileString: string = await FileSystem.readAsStringAsync(
+        localUri
+      );
+      this.setState({ webviewContent: fileString });
     } catch (error) {
       console.warn(error);
       console.warn("Unable to resolve index file");
