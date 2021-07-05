@@ -1,6 +1,7 @@
 import * as React from "react";
 import { WebView } from "react-native-webview";
 import AssetUtils from "expo-asset-utils";
+import * as FileSystem from "expo-file-system";
 import { Asset } from "expo-asset";
 import WebViewLeafletView from "./WebViewLeaflet.view";
 import {
@@ -14,7 +15,6 @@ import {
   OWN_POSTION_MARKER_ID
 } from "./models";
 import { ActivityOverlay } from "./ActivityOverlay";
-import * as FileSystem from "expo-file-system";
 import { LatLng } from "react-leaflet";
 import isEqual from "lodash.isequal";
 // @ts-ignore node types
@@ -34,6 +34,8 @@ export interface WebViewLeafletProps {
   mapCenterPosition?: LatLng;
   ownPositionMarker?: OwnPositionMarker;
   zoom?: number;
+  indexHtml: string;
+
 }
 
 interface State {
@@ -63,7 +65,7 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
       debugMessages: [],
       isLoading: null,
       mapCurrentCenterPosition: null,
-      webviewContent: null
+      webviewContent: null,
     };
     this.webViewRef = null;
   }
@@ -75,16 +77,13 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
   private loadHTMLFile = async () => {
     try {
       // let asset: Asset = await AssetUtils.resolveAsync(INDEX_FILE_PATH);
-      // let fileString: string = await FileSystem.readAsStringAsync(
+      // const { uri } = await FileSystem.getInfoAsync(
       //   asset.localUri
-      // );
-
-      const [{ localUri }] = await Asset.loadAsync(INDEX_FILE_PATH);
-      const fileString: string = await FileSystem.readAsStringAsync(
-          localUri
-          );
-
-      this.setState({ webviewContent: fileString });
+      //   );
+      //   const fileString: string = await FileSystem.readAsStringAsync(
+      //     asset.localUri
+      //     );
+      // this.setState({ webviewContent: fileString });
     } catch (error) {
       console.warn(error);
       console.warn("Unable to resolve index file");
@@ -230,17 +229,20 @@ class WebViewLeaflet extends React.Component<WebViewLeafletProps, State> {
     const {
       backgroundColor,
       doShowDebugMessages,
-      loadingIndicator
+      loadingIndicator,
+      indexHtml
     } = this.props;
 
-    if (webviewContent) {
+    // if (webviewContent ) {
+    if (indexHtml) {
       return (
         <WebViewLeafletView
           backgroundColor={backgroundColor}
           debugMessages={debugMessages}
           doShowDebugMessages={doShowDebugMessages}
           handleMessage={this.handleMessage}
-          webviewContent={webviewContent}
+          // webviewContent={webviewContent}
+          webviewContent={indexHtml}
           loadingIndicator={loadingIndicator}
           onError={this.onError}
           onLoadEnd={this.onLoadEnd}
